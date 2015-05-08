@@ -4,7 +4,7 @@ This repos contains another Docker image for the PHP general-purpose scripting l
 
 # Supported tags and respective `Dockerfile`
 
-- `5.3.3-apache-centos6`
+- [`5.3.3`, `5.3` (*5.3/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.3/apache/Dockerfile)
 
 # What is PHP
 
@@ -25,6 +25,21 @@ And many other interesting extensions exist, which are categorized both alphabet
 
 > [wikipedia-org/wiki/PHP](http://en.wikipedia.org/wiki/PHP)  
 ![logo](http://php.net/images/logos/php-med-trans.png)
+
+## Included Modules
+
+The following PHP modules are included with this Docker image:
+
+> php\_gd, php\_ldap, php\_mbstring, php\_mysql, php\_pgsql, php\_pdo, php\_soap, php\_xml, php\_devel, php\_pear, 
+> xdebug, oci8 (Instant Client 11.2.0.4), php\_pdflib (9.0.3)
+
+## Config File Paths
+
+- PHP: /etc, /etc/php.d
+- Apache: /etc/httpd/conf
+- Oracle Instantclient: /etc
+- PDFlib: /usr/local/PDFlib/
+
 
 # How to use this image
 
@@ -54,6 +69,15 @@ This environment variable must be set in order to use the `oci8` module. The def
 > [Managing data in containers](https://docs.docker.com/userguide/dockervolumes/#volume).
 
     docker run -name www-myserver -v /your/document/root:/var/www/myserver.domain.tld -d astrobl1904/php-dev:5.3.3-apache-centos6 httpd myserver.domain.tld
+
+## Build Dependencies
+
+In order to build this image the Oracle Instant Client RPMs for Red Hat distributions must be downloaded and put into the directory where the Dockerfile is located. The name of the RPMs must be
+
+- `oracle-instantclient.x86_64.rpm`
+- `oracle-instantclient-devel.x86_64.rpm`
+
+Additionally the proper path to the installed Oracle libraries must be updated in the ld.so loader config file `oracle-instantclient.x86_64.conf`.
 
 # Supported Docker versions
 

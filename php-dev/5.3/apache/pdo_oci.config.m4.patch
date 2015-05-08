@@ -1,0 +1,61 @@
+--- config.m4	2010-02-04 01:12:14.000000000 +0000
++++ config.m4.new	2015-04-14 21:43:17.294474670 +0000
+@@ -2,7 +2,7 @@
+ dnl config.m4 for extension pdo_oci
+ dnl vim:et:sw=2:ts=2:
+ 
+-SUPPORTED_LIB_VERS="9.0 10.1 11.1"  # This caters for all Oracle 9.x, 10.x and 11.1 installs
++SUPPORTED_LIB_VERS="9.0 10.1 11.1 11.2"  # This caters for all Oracle 9.x, 10.x and 11.1 installs
+ AC_DEFUN([AC_PDO_OCI_VERSION],[
+   AC_MSG_CHECKING([Oracle version])
+   for OCI_VER in $SUPPORTED_LIB_VERS; do
+@@ -44,8 +44,8 @@
+ [  --with-pdo-oci[=DIR]      PDO: Oracle OCI support. DIR defaults to \$ORACLE_HOME.
+                             Use --with-pdo-oci=instantclient,prefix,version 
+                             for an Oracle Instant Client SDK. 
+-                            For Linux with 10.2.0.3 RPMs (for example) use:
+-                            --with-pdo-oci=instantclient,/usr,10.2.0.3])
++                            For Linux with 11.2.0.4 RPMs (for example) use:
++                            --with-pdo-oci=instantclient,/usr,11.2])
+ 
+ if test "$PHP_PDO_OCI" != "no"; then
+ 
+@@ -74,25 +74,25 @@
+     PDO_OCI_IC_PREFIX="`echo $PDO_OCI_DIR | cut -d, -f2`"
+     PDO_OCI_IC_VERS="`echo $PDO_OCI_DIR | cut -d, -f3`"
+     AC_MSG_CHECKING([for oci.h])
+-    if test -f $PDO_OCI_IC_PREFIX/include/oracle/$PDO_OCI_IC_VERS/client/oci.h ; then
+-      PHP_ADD_INCLUDE($PDO_OCI_IC_PREFIX/include/oracle/$PDO_OCI_IC_VERS/client)
+-      AC_MSG_RESULT($PDO_OCI_IC_PREFIX/include/oracle/$PDO_OCI_IC_VERS/client)
+-    elif test -f $PDO_OCI_IC_PREFIX/lib/oracle/$PDO_OCI_IC_VERS/client/include/oci.h ; then
+-      PHP_ADD_INCLUDE($PDO_OCI_IC_PREFIX/lib/oracle/$PDO_OCI_IC_VERS/client/include)
+-      AC_MSG_RESULT($PDO_OCI_IC_PREFIX/lib/oracle/$PDO_OCI_IC_VERS/client/include)
++    if test -f $PDO_OCI_IC_PREFIX/include/oracle/$PDO_OCI_IC_VERS/client64/oci.h ; then
++      PHP_ADD_INCLUDE($PDO_OCI_IC_PREFIX/include/oracle/$PDO_OCI_IC_VERS/client64)
++      AC_MSG_RESULT($PDO_OCI_IC_PREFIX/include/oracle/$PDO_OCI_IC_VERS/client64)
++    elif test -f $PDO_OCI_IC_PREFIX/lib/oracle/$PDO_OCI_IC_VERS/client64/include/oci.h ; then
++      PHP_ADD_INCLUDE($PDO_OCI_IC_PREFIX/lib/oracle/$PDO_OCI_IC_VERS/client64/include)
++      AC_MSG_RESULT($PDO_OCI_IC_PREFIX/lib/oracle/$PDO_OCI_IC_VERS/client64/include)
+     elif test -f $PDO_OCI_IC_PREFIX/sdk/include/oci.h ; then
+       PHP_ADD_INCLUDE($PDO_OCI_IC_PREFIX/sdk/include)
+       AC_MSG_RESULT($PDO_OCI_IC_PREFIX/sdk/include)
+-    elif test -f $PDO_OCI_IC_PREFIX/client/include/oci.h ; then
+-      PHP_ADD_INCLUDE($PDO_OCI_IC_PREFIX/client/include)
+-      AC_MSG_RESULT($PDO_OCI_IC_PREFIX/client/include)
++    elif test -f $PDO_OCI_IC_PREFIX/client64/include/oci.h ; then
++      PHP_ADD_INCLUDE($PDO_OCI_IC_PREFIX/client64/include)
++      AC_MSG_RESULT($PDO_OCI_IC_PREFIX/client64/include)
+     else
+       AC_MSG_ERROR([I'm too dumb to figure out where the include dir is in your Instant Client install])
+     fi
+-    if test -f "$PDO_OCI_IC_PREFIX/lib/oracle/$PDO_OCI_IC_VERS/client/lib/libclntsh.so" ; then
+-    PDO_OCI_LIB_DIR="$PDO_OCI_IC_PREFIX/lib/oracle/$PDO_OCI_IC_VERS/client/lib"
+-    elif test -f "$PDO_OCI_IC_PREFIX/client/lib/libclntsh.so" ; then
+-      PDO_OCI_LIB_DIR="$PDO_OCI_IC_PREFIX/client/lib"
++    if test -f "$PDO_OCI_IC_PREFIX/lib/oracle/$PDO_OCI_IC_VERS/client64/lib/libclntsh.so" ; then
++    PDO_OCI_LIB_DIR="$PDO_OCI_IC_PREFIX/lib/oracle/$PDO_OCI_IC_VERS/client64/lib"
++    elif test -f "$PDO_OCI_IC_PREFIX/client64/lib/libclntsh.so" ; then
++      PDO_OCI_LIB_DIR="$PDO_OCI_IC_PREFIX/client64/lib"
+     elif test -f "$PDO_OCI_IC_PREFIX/libclntsh.so" ; then
+       PDO_OCI_LIB_DIR="$PDO_OCI_IC_PREFIX"
+     else
