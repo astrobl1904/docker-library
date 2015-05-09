@@ -1,6 +1,6 @@
-# Development environment for FHSys with Apache httpd and PHP 5.3.3 as
-# module. This image contains pecl xdebug and PDFlib 9.0.3 with a valid
-# licence.
+# Development environment for sites with legacy PHP running as Apache module.
+# See the full README for all modules and settings.
+# 
 # Some commands based on work of James Deathe's jdeathe/centos-ssh
 
 FROM centos:centos6
