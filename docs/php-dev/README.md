@@ -5,6 +5,7 @@ This repos contains another Docker image for the PHP general-purpose scripting l
 # Supported tags and respective `Dockerfile`
 
 - [`5.3.3`, `5.3` (*5.3/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.3/apache/Dockerfile)
+- [`5.6.8`, `5.6`, `latest` (*5.6/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/apache/Dockerfile)
 
 # What is PHP
 
@@ -31,7 +32,7 @@ And many other interesting extensions exist, which are categorized both alphabet
 The following PHP modules are included with this Docker image:
 
 > php\_gd, php\_ldap, php\_mbstring, php\_mysql, php\_pgsql, php\_pdo, php\_soap, php\_xml, php\_devel, php\_pear, 
-> xdebug, oci8 (Instant Client 11.2.0.4), php\_pdflib (9.0.3)
+> xdebug, oci8 (Instant Client 12.1.0.2), php\_pdflib (9.0.3)
 
 ## Config File Paths
 
