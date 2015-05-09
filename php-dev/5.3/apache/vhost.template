@@ -1,0 +1,15 @@
+<VirtualHost {{NET_IPADDR}}>
+    ServerAdmin root@localhost
+    DocumentRoot /var/www/{{NET_FQDN}}
+    ServerName {{NET_FQDN}}
+    ErrorLog logs/{{NET_FQDN}}-error_log
+    CustomLog logs/{{NET_FQDN}}-access_log combined
+    
+    <Directory /var/www/{{NET_FQDN}}>
+        DirectoryIndex index.php index.html index.html.var default.htm
+        AllowOverride None
+        Options +Includes -Indexes
+    </Directory>
+    
+    RewriteEngine On
+</VirtualHost>
