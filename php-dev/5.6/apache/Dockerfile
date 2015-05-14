@@ -92,6 +92,19 @@ RUN { find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --stri
     && yum clean all && { rm -rf /var/cache/yum/* || true; } \
     && mv $PHP_INI_DIR/php.ini $PHP_INI_DIR/php.ini.dist \
     && mv $APACHE_CONF_DIR/conf/httpd.conf $APACHE_CONF_DIR/conf/httpd.conf.dist \
-    && mkdir -p $APACHE_CONF_DIR/sites \
-    && { rm $APACHE_CONF_DIR/conf.d/* $APACHE_CONF_DIR/sites/* || true; }
+    && mkdir -p ${APACHE_CONF_DIR}/sites \
+    && { rm ${APACHE_CONF_DIR}/conf.d/* ${APACHE_CONF_DIR}/sites/* || true; }
 
+COPY php.ini $PHP_INI_DIR/php.ini
+COPY httpd.conf $APACHE_CONF_DIR/conf/
+COPY vhost.template $APACHE_CONF_DIR/sites/
+
+WORKDIR /var/www/html
+
+COPY docker-entrypoint.sh /
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+EXPOSE 80
+
+CMD ["httpd"]
