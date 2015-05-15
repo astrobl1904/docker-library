@@ -2,10 +2,11 @@
 set -e
 
 if [ "$1" = 'httpd' ]; then
-    
+
     shift
 
-    servername=$(cat /etc/hostname)
+    servername="$(cat /etc/hostname)"
+    ipaddr="$(ip -family inet address show dev eth0 | grep 'inet' | sed -r 's/\s*inet ([^\/]+).*/\1/')"
 
     # Update Apache config ServerName directive
     if [ -n "$(grep '{{NET_HOSTNAME}}' ${APACHE_CONF_DIR}/conf/httpd.conf)" ]; then
@@ -21,7 +22,6 @@ if [ "$1" = 'httpd' ]; then
         for ((i = 0; i < ${#args[@]}; i++)); do
 
             site="${args[$i]}"
-            ipaddr="$(ifconfig eth0 | grep 'inet addr' | sed -r 's/\s*inet addr:([^ ]+).*/\1/')"
             if [ ! -f "${APACHE_CONF_DIR}/sites/${site}.conf" ]; then
 
                 cp "${APACHE_CONF_DIR}/sites/vhost.template" "${APACHE_CONF_DIR}/sites/${site}.conf"
