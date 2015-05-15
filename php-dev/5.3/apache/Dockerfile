@@ -136,6 +136,7 @@ RUN yum --setopt=tsflags=nodocs -y install \
     && mv $PHP_INI_DIR/php.ini $PHP_INI_DIR/php.ini.dist \
     && mv $APACHE_CONF_DIR/conf/httpd.conf $APACHE_CONF_DIR/conf/httpd.conf.dist \
     && mkdir -p $APACHE_CONF_DIR/sites \
+    && mkdir -p /var/spool/xdebug/{profiler,trace} && chown -R apache:apache /var/spool/xdebug \
     && { rm $APACHE_CONF_DIR/conf.d/* $APACHE_CONF_DIR/sites/* || true; }
 COPY php.ini $PHP_INI_DIR/php.ini
 COPY httpd.conf $APACHE_CONF_DIR/conf/
