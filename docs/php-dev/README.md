@@ -4,8 +4,8 @@ This repos contains another Docker image for the PHP general-purpose scripting l
 
 # Supported tags and respective `Dockerfile`
 
-- [`5.3.3`, `5.3` (*5.3/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.3/apache/Dockerfile)
-- [`5.6.8`, `5.6`, `latest` (*5.6/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/apache/Dockerfile)
+- [`5.3.3-apache-centos6`, `5.3-apache-centos6` (*5.3/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.3/apache/Dockerfile)
+- [`5.6.9-apache-centos`, `5.6-apache-centos`, `latest` (*5.6/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/apache/Dockerfile)
 
 # What is PHP
 
@@ -41,14 +41,25 @@ The following PHP modules are included with this Docker image:
 - Oracle Instantclient: /etc
 - PDFlib: /usr/local/PDFlib/
 
+## Xdebug Configuration
+
+Xdebug remote debugging is enabled and with `remote_connect_back` turned on. 
+Xdebug uses the standard port tcp/9000 to connect to the debugging client. 
+Additionally the profiler can be triggered with the GET/POST variable 
+`XDEBUG_PROFILE`. Trace and profile files are stored in the directories
+`profiler` and `trace` in the directory `/var/spool/xdebug`.
+## Apache Logs
+
+Apache logs are kept in `/var/log/httpd/`. Logs for sites are saved in a 
+folder in the log directory. The folder is named after the server's name.
 
 # How to use this image
 
-This image contains the major database modules, the PDFlib module and the Xdebug module in version 2.2.7, the last supported version for PHP 5.3. Xdebug is configured to use callback and uses port 9000.
+This image contains the major database modules, the PDFlib module and the Xdebug module.
 
 ## Start a PHP Apache default instance
 
-    docker run --name www-default -d astrobl1904/php-dev:5.3.3-apache-centos6
+    docker run --name www-default -d astrobl1904/php-dev
     
 This image includes `EXPOSE 80` (the default HTTP port)
 
@@ -69,7 +80,7 @@ This environment variable must be set in order to use the `oci8` module. The def
 > If you want to create a certain Apache vhost, you may do so with providing an argument to the httpd command. This creates a `DocumentRoot` under `/var/www/` with the provided servername. You can either mount a local directory into this mount point or mount a volume from another Docker container.
 > [Managing data in containers](https://docs.docker.com/userguide/dockervolumes/#volume).
 
-    docker run -name www-myserver -v /your/document/root:/var/www/myserver.domain.tld -d astrobl1904/php-dev:5.3.3-apache-centos6 httpd myserver.domain.tld
+    docker run -name www-myserver -v /your/document/root:/var/www/myserver.domain.tld -d astrobl1904/php-dev httpd myserver.domain.tld
 
 ## Build Dependencies
 
