@@ -1,6 +1,10 @@
 # About this Repo
 
-This repos contains another Docker image for the PHP general-purpose scripting language.
+This repo contains another Docker image for the PHP general-purpose scripting language.
+
+It is based on CentOS Linux and contains the Oracle `oci8` and the
+`Xdebug` modules. For PDF support PDFlib's proprietary `PDFlib` module is
+included.
 
 # Supported tags and respective `Dockerfile`
 
