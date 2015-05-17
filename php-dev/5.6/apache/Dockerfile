@@ -6,7 +6,7 @@
 FROM centos:centos7
 MAINTAINER Andreas Strobl <astroblx@asgraphics.at>
 
-ENV PHP_VERSION=5.6.8 \
+ENV PHP_VERSION=5.6.9 \
     PHP_INI_DIR=/etc \
     APACHE_CONF_DIR=/etc/httpd \
     ORACLE_INSTANTCLIENT_VERSION=12.1.0.2 \
