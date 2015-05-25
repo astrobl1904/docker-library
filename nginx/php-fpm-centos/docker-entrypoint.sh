@@ -1,11 +1,28 @@
 #!/usr/bin/env bash
 set -e
 
+# Updates the backend settings if a php-fpm container is linked
+# to this container
+function updatePhpFpmBackend() {
+    local _backendContainer="$(env | grep _PORT_9000_TCP_ADDR | cut -d'=' -f2)"
+    local _backendConfig="${NGINX_CONF_DIR}/conf.d/php-fpm-backend.conf"
+
+    if [ -f "${_backendConfig}" -a -n "${_backendContainer}" ]; then
+
+        sed -ri "s/server 127\.0\.0\.1\:/server ${_backendContainer}\:/" "${_backendConfig}"
+
+    fi
+}
+
+
+# Main
 if [ "$1" = 'nginx' ]; then
 
     shift
 
     servername="$(cat /etc/hostname)"
+
+    updatePhpFpmBackend
 
     if [ $# -eq 0 ]; then
         
