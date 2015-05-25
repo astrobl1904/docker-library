@@ -1,8 +1,7 @@
 FROM centos:centos7
 MAINTAINER Andreas Strobl <astroblx@asgraphics.at>
 
-ENV PHP_VERSION=5.6.9 \
-    PHP_INI_DIR=/etc
+ENV NGINX_CONF_DIR=/etc/nginx
 
 # Enable EPEL & Remi Repository and update system
 RUN curl -o /tmp/epel-release-7-5.noarch.rpm -SL "http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm" \
@@ -41,5 +40,22 @@ RUN curl -o /tmp/epel-release-7-5.noarch.rpm -SL "http://dl.fedoraproject.org/pu
 RUN yum --setopt=tsflags=nodocs -y install \
         nginx \
         net-tools \
-    && rm -rf /var/www/html && mkdir -p /var/www/html
-    
+    && rm -rf /var/www/html && mkdir -p /var/www/html \
+    && { mkdir -p /etc/nginx/sites && mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.dist || true; }
+
+RUN { find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true; } \
+    && yum clean all && { rm -rf /var/cache/yum/* || true; }
+
+COPY nginx-site.template $NGINX_CONF_DIR/sites/
+COPY php-fpm-backend.conf $NGINX_CONF_DIR/conf.d/php-fpm-backend.conf
+COPY nginx.conf $NGINX_CONF_DIR/nginx.conf
+COPY docker-entrypoint.sh /
+
+WORKDIR /var/www/html
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+EXPOSE 80
+
+CMD ["nginx"]
+
