@@ -1,0 +1,1 @@
+nginx is an HTTP and reverse proxy server. This image is based on the public CentOS image.
