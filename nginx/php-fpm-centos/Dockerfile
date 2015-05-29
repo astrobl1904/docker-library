@@ -1,7 +1,8 @@
 FROM centos:centos7
 MAINTAINER Andreas Strobl <astroblx@asgraphics.at>
 
-ENV NGINX_CONF_DIR=/etc/nginx
+ENV NGINX_CONF_DIR=/etc/nginx \
+    PHP_FPM_BACKEND_SERVER=127.0.0.1:9000
 
 # Enable EPEL & Remi Repository and update system
 RUN curl -o /tmp/epel-release-7-5.noarch.rpm -SL "http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm" \

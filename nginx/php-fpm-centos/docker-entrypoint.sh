@@ -4,16 +4,41 @@ set -e
 # Updates the backend settings if a php-fpm container is linked
 # to this container
 function updatePhpFpmBackend() {
-    local _backendContainer="$(env | grep _PORT_9000_TCP_ADDR | cut -d'=' -f2)"
+    
+    local _backendServer="${PHP_FPM_BACKEND_SERVER}"
     local _backendConfig="${NGINX_CONF_DIR}/conf.d/php-fpm-backend.conf"
+    
+    if [ $# -eq 1 -a -n "$1" ]; then
 
-    if [ -f "${_backendConfig}" -a -n "${_backendContainer}" ]; then
+        local _backendContainer="$(env | grep ${1}_PORT= | cut -d'=' -f2)"
+        if [ -n "${_backendContainer}" ]; then
+            _backendServer=${_backendContainer}
+        fi
 
-        sed -ri "s/server 127\.0\.0\.1\:/server ${_backendContainer}\:/" "${_backendConfig}"
+    fi
+    
+    if [ -f "${_backendConfig}" -a -n "${_backendServer}" ]; then
+
+        sed -ri "s/server 127\.0\.0\.1\:[0-9]+/server ${_backendServer}/" "${_backendConfig}"
 
     fi
 }
 
+# Get linked container alias
+function linkedContainerAlias() {
+    local _linkedContainer="$(env | grep _NAME=/ | cut -d'=' -f2)"
+    local _prefix=""
+    
+    if [ -n "${_linkedContainer}" ]; then
+
+        local _containerName="$(echo ${_linkedContainer} | cut -d'/' -f2)"
+        local _containerAlias="$(echo ${_linkedContainer} | cut -d'/' -f3)"
+        _prefix="$(echo ${_containerAlias} | tr 'a-z' 'A-Z')"
+        
+    fi
+    
+    echo "${_prefix}"
+}
 
 # Main
 if [ "$1" = 'nginx' ]; then
@@ -21,8 +46,9 @@ if [ "$1" = 'nginx' ]; then
     shift
 
     servername="$(cat /etc/hostname)"
+    containerAlias="$(linkedContainerAlias)"
 
-    updatePhpFpmBackend
+    updatePhpFpmBackend "${containerAlias}"
 
     if [ $# -eq 0 ]; then
         
