@@ -11,6 +11,9 @@ function updatePhpFpmBackend() {
     if [ $# -eq 1 -a -n "$1" ]; then
 
         local _backendContainer="$(env | grep ${1}_PORT= | cut -d'=' -f2)"
+        _backendContainer="$(echo ${_backendContainer} | \
+            sed -r 's!^((tcp|udp)://)([0-9]{1,3}(\.[0-9]{1,3}){3}|[0-9a-f:]+)(%[a-z0-9]+)?:([0-9]+).*!\3:\6!' \
+        )"
         if [ -n "${_backendContainer}" ]; then
             _backendServer=${_backendContainer}
         fi
@@ -19,7 +22,7 @@ function updatePhpFpmBackend() {
     
     if [ -f "${_backendConfig}" -a -n "${_backendServer}" ]; then
 
-        sed -ri "s/server 127\.0\.0\.1\:[0-9]+/server ${_backendServer}/" "${_backendConfig}"
+        sed -ri "s!server 127\.0\.0\.1\:[0-9]+!server ${_backendServer}!" "${_backendConfig}"
 
     fi
 }
