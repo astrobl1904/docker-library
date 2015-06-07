@@ -10,6 +10,7 @@ included.
 
 - [`5.3.3-apache-centos6`, `5.3-apache-centos6` (*5.3/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.3/apache/Dockerfile)
 - [`5.6.9-apache-centos`, `5.6-apache-centos`, `latest` (*5.6/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/apache/Dockerfile)
+- [`5.6.9-fpm-centos`, `5.6-fpm-centos` (*5.6/fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/fpm/Dockerfile)
 
 # What is PHP
 
@@ -66,6 +67,17 @@ This image contains the major database modules, the PDFlib module and the Xdebug
     docker run --name www-default -d astrobl1904/php-dev
     
 This image includes `EXPOSE 80` (the default HTTP port)
+
+## Start a PHP FastCGI container
+
+    docker run --name php-fpm-backend -d astrobl1904/php-dev:5.6-fpm-centos
+    
+This image includes `EXPOSE 9000`. If linked to a web server container make sure both container use the same documents root. For more information see
+
+- [Managing data in containers](https://docs.docker.com/userguide/dockervolumes/#volume)
+- [Linking Container Together](https://docs.docker.com/userguide/dockerlinks/)
+
+You might try the `astrobl1904/nginx` image which supports linking of a container using the `astrobl1904/php-dev:5.6-fpm-centos` image. All images described here are based on Docker's public library image `CentOS`.
 
 ## Environment Variables
 
