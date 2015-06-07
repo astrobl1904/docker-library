@@ -1,1 +1,1 @@
-PHP is a popular general-purpose scripting language that is especially suited to web development.
+PHP general-purpose scripting language with XDebug module for web development (based on CentOS).
