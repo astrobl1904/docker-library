@@ -1,4 +1,4 @@
-# Development environment for sites with PHP running as Apache module.
+# Development environment for sites with PHP running as PHP FastCGI backend.
 # See the full README for all modules and settings.
 # 
 # Dockerfile based on the file of the official PHP container.
