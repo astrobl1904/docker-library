@@ -10,14 +10,14 @@ It is based on CentOS Linux and is prepared to use PHP with the PHP FastCGI Proc
 
 # What is Nginx?
 
-nginx [engine x] is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP proxy server, originally written by Igor Sysoev.
+nginx [engine x] is a HTTP and reverse proxy server, a mail proxy server, and a generic TCP proxy server, originally written by Igor Sysoev.
 
 > [wikipedia-org/wiki/Nginx](https://en.wikipedia.org/wiki/Nginx)  
 ![logo](http://nginx.org/nginx.png)
 
 ## Included Configurations
 
-The image contains the default nginx configuration but with the daemon set to off. For FastCGI support a backend configuration is included. As with the PHP as Apache module the Web server can be customized by running nginx with a site name as additional argument (see the Dockerfile and the How to part of this readme).
+The image contains the default nginx configuration but with the `daemon` directive set to off. For FastCGI support a backend configuration is included. As with the PHP-as-Apache-module the Web server can be customized by running `nginx` with a site name as additional argument (see the Dockerfile and the How to part of this readme).
 
 The image is based on Docker's public CentOS repository.
 
