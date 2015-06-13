@@ -9,8 +9,8 @@ included.
 # Supported tags and respective `Dockerfile`
 
 - [`5.3.3-apache-centos6`, `5.3-apache-centos6` (*5.3/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.3/apache/Dockerfile)
-- [`5.6.9-apache-centos`, `5.6-apache-centos`, `latest` (*5.6/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/apache/Dockerfile)
-- [`5.6.9-fpm-centos`, `5.6-fpm-centos` (*5.6/fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/fpm/Dockerfile)
+- [`5.6.10-apache-centos`, `5.6-apache-centos`, `5-apache-centos`, `apache-centos`, `latest` (*5.6/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/apache/Dockerfile)
+- [`5.6.10-fpm-centos`, `5.6-fpm-centos`, `5-fpm-centos`, `fpm-centos` (*5.6/fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/fpm/Dockerfile)
 
 # What is PHP
 
@@ -38,6 +38,15 @@ The following PHP modules are included with this Docker image:
 
 > php\_gd, php\_ldap, php\_mbstring, php\_mysql, php\_pgsql, php\_pdo, php\_soap, php\_xml, php\_devel, php\_pear, 
 > xdebug, oci8 (Instant Client 12.1.0.2), php\_pdflib (9.0.3)
+
+## Included Code Quality Tools ##
+
+In releases 5.6.10 and forthgoing the following code quality tools are included and can be run interactively in a container
+
+> phpunit (PHPUnit), vfsstream (vfsStream), behat (Behat), phploc (PHPLoc), pdepend (PHP\_Depend), phpmd (PHP Mess Detector),
+> phpcs (PHP\_CodeSniffer), phpcpd (PHP Copy/Paste Detector), phpdcd (PHP Dead Code Detector), hhvm-wrapper, phpdox (phpDox)
+
+For more information please visit [The PHP Quality Assurance Toolchain](http://phpqatools.org)
 
 ## Config File Paths
 
@@ -109,7 +118,7 @@ Additionally the proper path to the installed Oracle libraries must be updated i
 
 # Supported Docker versions
 
-This image is supported on Docker version 1.6.0.
+This image is supported on Docker version 1.6.2.
 
 Support for older versions (down to 1.0) is provided on a best-effort basis.
 

@@ -80,7 +80,7 @@ This environment variable contains the IP address of the backend server followed
 
 # Supported Docker versions
 
-This image is supported on Docker version 1.6.0.
+This image is supported on Docker version 1.6.2.
 
 Support for older versions (down to 1.0) is provided on a best-effort basis.
 
