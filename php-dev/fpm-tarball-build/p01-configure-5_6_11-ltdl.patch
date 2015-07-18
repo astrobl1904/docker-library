@@ -1,0 +1,20 @@
+--- configure.orig	2015-07-12 17:00:46.753057078 +0000
++++ configure	2015-07-12 17:01:09.075426511 +0000
+@@ -58420,7 +58420,7 @@
+
+   save_old_LDFLAGS=$LDFLAGS
+   ac_stuff="
+-    -L$MCRYPT_DIR/$PHP_LIBDIR -lltdl
++    -L$MCRYPT_DIR/$PHP_LIBDIR
+   "
+
+   save_ext_shared=$ext_shared
+@@ -58561,7 +58561,7 @@
+   c|c_r|pthread*) ;;
+   *)
+     if test "$ext_shared" = "yes"; then
+-        MCRYPT_SHARED_LIBADD="-lltdl $MCRYPT_SHARED_LIBADD"
++        MCRYPT_SHARED_LIBADD="$MCRYPT_SHARED_LIBADD"
+     else
+
+
