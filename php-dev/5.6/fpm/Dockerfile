@@ -6,7 +6,7 @@
 FROM centos:centos7
 MAINTAINER Andreas Strobl <astroblx@asgraphics.at>
 
-ENV PHP_VERSION=5.6.10 \
+ENV PHP_VERSION=5.6.11 \
     PHP_INI_DIR=/etc \
     PHP_FPM_CONF_DIR=/etc \
     ORACLE_INSTANTCLIENT_VERSION=12.1.0.2 \
@@ -75,17 +75,18 @@ RUN yum --setopt=tsflags=nodocs --nogpgcheck -y install \
         php-pear \
         php-xdebug
 
-RUN echo '; Enable xdebug extension module' > $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'zend_extension=xdebug.so' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo '[xdebug]' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'xdebug.remote_enable = 1' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'xdebug.remote_connect_back = 1' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'xdebug.profiler_enable_trigger = 1' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'xdebug.profiler_output_dir = "/var/spool/xdebug/profiler"' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'xdebug.trace_output_dir = "/var/spool/xdebug/trace"' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && mkdir -p /usr/local/PDFlib/PDFlib/9.0 \
-    && echo '; Enable pdflib extension module' > $PHP_INI_DIR/php.d/15-pdflib.ini \
-    && echo 'extension="/usr/lib64/php/modules/php_pdflib.so"' >> $PHP_INI_DIR/php.d/15-pdflib.ini
+RUN echo '; Enable xdebug extension module' > $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'zend_extension=xdebug.so' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo '[xdebug]' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'xdebug.remote_enable = 1' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'xdebug.remote_connect_back = 1' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'xdebug.profiler_enable_trigger = 1' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'xdebug.profiler_output_dir = "/var/spool/xdebug/profiler"' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'xdebug.trace_output_dir = "/var/spool/xdebug/trace"' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && rm  -f $PHP_INI_DIR/php.d/15-xdebug.ini \
+    && install -m 755 -d /usr/local/PDFlib/PDFlib/9.0 \
+    && echo '; Enable php_pdflib extension module' > $PHP_INI_DIR/php.d/20-php_pdflib.ini \
+    && echo 'extension="/usr/lib64/php/modules/php_pdflib.so"' >> $PHP_INI_DIR/php.d/20-php_pdflib.ini
 
 RUN curl -o /tmp/phpunit.phar -SL "https://phar.phpunit.de/phpunit.phar" \
     && chmod +x /tmp/phpunit.phar \
@@ -138,6 +139,7 @@ RUN { find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --stri
     && mv $PHP_INI_DIR/php.ini $PHP_INI_DIR/php.ini.dist \
     && mv $PHP_FPM_CONF_DIR/php-fpm.conf $PHP_FPM_CONF_DIR/php-fpm.conf.dist \
     && mkdir -p /var/spool/xdebug/{profiler,trace} && chown -R apache:apache /var/spool/xdebug \
+    && install -m 750 -o apache -d /var/lib/php/{session,wsdlcache} \
     && { rm $PHP_FPM_CONF_DIR/php-fpm.d/* || true; }
 
 COPY php.ini $PHP_INI_DIR/
