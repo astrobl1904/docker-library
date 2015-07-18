@@ -6,14 +6,14 @@
 FROM centos:centos7
 MAINTAINER Andreas Strobl <astroblx@asgraphics.at>
 
-ENV PHP_VERSION=5.6.10 \
+ENV PHP_VERSION=5.6.11 \
     PHP_INI_DIR=/etc \
     APACHE_CONF_DIR=/etc/httpd \
     ORACLE_INSTANTCLIENT_VERSION=12.1.0.2 \
     TNS_ADMIN=/etc \
     LD_LIBRARY_PATH=/usr/lib/oracle/12.1/client64/lib \
     NLS_LANG=GERMAN_AUSTRIA.WE8ISO8859P15
-    
+
 # Enable EPEL & Remi Repository and update system
 RUN curl -o /tmp/epel-release-7-5.noarch.rpm -SL "http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm" \
     && rpm --import http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7 \
@@ -59,6 +59,7 @@ RUN yum --setopt=tsflags=nodocs --nogpgcheck -y install \
     && /bin/rm -f /tmp/oracle-instantclient*.x86_64.rpm \
     && echo "# Placeholder tnsnames.ora for Docker containers" > $TNS_ADMIN/tnsnames.ora \
     && yum --setopt=tsflags=nodocs -y install \
+        net-tools \
         httpd \
         httpd-tools \
         php \
@@ -77,17 +78,18 @@ RUN yum --setopt=tsflags=nodocs --nogpgcheck -y install \
         php-xdebug \
     && rm -rf /var/www/html && mkdir -p /var/www/html && chown -R apache:apache /var/www/html
 
-RUN echo '; Enable xdebug extension module' > $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'zend_extension=xdebug.so' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo '[xdebug]' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'xdebug.remote_enable = 1' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'xdebug.remote_connect_back = 1' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'xdebug.profiler_enable_trigger = 1' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'xdebug.profiler_output_dir = "/var/spool/xdebug/profiler"' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && echo 'xdebug.trace_output_dir = "/var/spool/xdebug/trace"' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
-    && mkdir -p /usr/local/PDFlib/PDFlib/9.0 \
-    && echo '; Enable pdflib extension module' > $PHP_INI_DIR/php.d/15-pdflib.ini \
-    && echo 'extension="/usr/lib64/php/modules/php_pdflib.so"' >> $PHP_INI_DIR/php.d/15-pdflib.ini
+RUN echo '; Enable xdebug extension module' > $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'zend_extension=xdebug.so' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo '[xdebug]' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'xdebug.remote_enable = 1' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'xdebug.remote_connect_back = 1' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'xdebug.profiler_enable_trigger = 1' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'xdebug.profiler_output_dir = "/var/spool/xdebug/profiler"' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && echo 'xdebug.trace_output_dir = "/var/spool/xdebug/trace"' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
+    && rm  -f $PHP_INI_DIR/php.d/15-xdebug.ini \
+    && install -m 755 -d /usr/local/PDFlib/PDFlib/9.0 \
+    && echo '; Enable php_pdflib extension module' > $PHP_INI_DIR/php.d/20-php_pdflib.ini \
+    && echo 'extension="/usr/lib64/php/modules/php_pdflib.so"' >> $PHP_INI_DIR/php.d/20-php_pdflib.ini
 
 RUN curl -o /tmp/phpunit.phar -SL "https://phar.phpunit.de/phpunit.phar" \
     && chmod +x /tmp/phpunit.phar \
