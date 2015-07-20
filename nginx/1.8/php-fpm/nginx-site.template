@@ -1,0 +1,30 @@
+# Nginx Server Configuration with php-fpm backend listening on port 9000
+server {
+    listen      80;
+    server_name {{NET_FQDN}};
+    root        /var/www/{{NET_FQDN}};
+
+    access_log  /var/log/nginx/{{NET_FQDN}}-access.log main;
+    error_log   /var/log/nginx/{{NET_FQDN}}-error.log  warn;
+
+    index       index.html index.htm index.php default.html default.htm default.php;
+
+    location    / {
+    }
+
+    location ~ \.phpm?$ {
+        fastcgi_pass    php-fpm-backend;
+        fastcgi_index   index.php;
+        fastcgi_buffers 256 4k;
+        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include         fastcgi_params;
+
+    }
+
+    location /fpm-status {
+        fastcgi_pass    php-fpm-backend;
+        fastcgi_buffers 8 4k;
+        fastcgi_param   SCRIPT_FILENAME /fpm-status;
+        include         fastcgi_params;
+    }
+}
