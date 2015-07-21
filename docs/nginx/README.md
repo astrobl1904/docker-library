@@ -6,7 +6,8 @@ It is based on CentOS Linux and is prepared to use PHP with the PHP FastCGI Proc
 
 # Supported tags and respective `Dockerfile`
 
-- [`1.6-php-fpm-centos`, `1.6.3-php-fpm-centos`, `latest` (*1.6/php-fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/nginx/1.6/php-fpm/Dockerfile)
+- [`1.6-php-fpm-centos`, `1.6.3-php-fpm-centos` (*1.6/php-fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/nginx/1.6/php-fpm/Dockerfile)
+- [`1.8-php-fpm-centos`, `1.8.0-php-fpm-centos`, `php-fpm-centos`, `latest` (*1.8/php-fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/nginx/1.8/php-fpm/Dockerfile)
 
 # What is Nginx?
 
@@ -74,9 +75,20 @@ This environment variable contains the IP address of the backend server followed
 
 # How to extend this image
 
-> If you want to create a certain Apache-like vhost, you may do so with providing an argument to the `nginx` command. This creates a `DocumentRoot` under `/var/www/` with the provided servername. You can either mount a local directory into this mount point or mount a volume from another Docker container.
+If you want to create a certain Apache-like vhost, you may do so with providing an argument to the `nginx` command. This creates a `DocumentRoot` under `/var/www/` with the provided servername. You can either mount a local directory into this mount point or mount a volume from another Docker container.
 > [Managing data in containers](https://docs.docker.com/userguide/dockervolumes/#volume).
 
+## Key-Value pairs ##
+
+If you customized the nginx-site.template with additional placeholders you can provide key-value pairs where the key represents the name of the placeholder and the value will be used to replace the placeholder with.
+
+The syntax is
+
+```
+docker run nginx:latest nginx your.server.domain [ key1=value1][ key2=value2] another.server.domain [key1=value][ key=value2] ...
+```
+
+In the template each key is surrounded with double braces and will be substituted with the provided value. Thus for the command above the template contains the placeholders {{key}}, {{key1}}, and {{key2}}. Any line with  a placeholder not substituted will be removed in the final site config.
 
 # Supported Docker versions
 
