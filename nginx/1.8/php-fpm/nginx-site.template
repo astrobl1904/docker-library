@@ -8,6 +8,8 @@ server {
     error_log   /var/log/nginx/{{NET_FQDN}}-error.log  warn;
 
     index       index.html index.htm index.php default.html default.htm default.php;
+    
+    charset {{NGINX_SERVER_CHARSET}};
 
     location    / {
     }

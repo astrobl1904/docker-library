@@ -83,22 +83,51 @@ __END_OF_DEFAULT_SITE_CONF__
 
         declare -a args
         args=("$@")
+        site=""
 
         # Create site config files and document root directory
         for ((i = 0; i < ${#args[@]}; i++)); do
 
-            site="${args[$i]}"
-            if [ ! -f "${NGINX_CONF_DIR}/sites/${site}.conf" ]; then
+            # Test for parameter or site
+            _arg="${args[$i]}"
+            if [[ ${_arg} =~ "=" ]]; then
 
-                cp "${NGINX_CONF_DIR}/sites/nginx-site.template" "${NGINX_CONF_DIR}/sites/${site}.conf"
-                sed -ri "s/\{\{NET_FQDN\}\}/${site}/g" "${NGINX_CONF_DIR}/sites/${site}.conf"
+                # Replace placeholders
+                if [ -n "${site}" ]; then
 
-                if [ ! -d "/var/www/${site}" ]; then
-                    mkdir -p /var/www/${site}
+                    _key=$(echo ${_arg} | cut -d= -f1)
+                    _value=$(echo ${_arg} | cut -d= -f2-255 | sed -r 's#/#\\\/#g')
+                    
+                    sed -ri "s/\{\{${_key}\}\}/${_value}/g" "${NGINX_CONF_DIR}/sites/${site}.conf"
+                    
                 fi
+
+            else
+
+                # Create new site config
+                if [ -n "${site}" ]; then
+                    sed -ri "/\{\{[^\}]+\}\}/d" "${NGINX_CONF_DIR}/sites/${site}.conf"
+                fi
+
+                site="${args[$i]}"
+                if [ ! -f "${NGINX_CONF_DIR}/sites/${site}.conf" ]; then
+
+                    cp "${NGINX_CONF_DIR}/sites/nginx-site.template" "${NGINX_CONF_DIR}/sites/${site}.conf"
+                    sed -ri "s/\{\{NET_FQDN\}\}/${site}/g" "${NGINX_CONF_DIR}/sites/${site}.conf"
+
+                    if [ ! -d "/var/www/${site}" ]; then
+                        mkdir -p /var/www/${site}
+                    fi
+                fi
+
             fi
 
         done
+
+        # Cleanup last site config
+        if [ -n "${site}" ]; then
+            sed -ri "/\{\{[^\}]+\}\}/d" "${NGINX_CONF_DIR}/sites/${site}.conf"
+        fi
 
     fi
 
