@@ -6,7 +6,7 @@
 FROM centos:centos7
 MAINTAINER Andreas Strobl <astroblx@asgraphics.at>
 
-ENV PHP_VERSION=7.0.b1 \
+ENV PHP_VERSION=7.0.0b2 \
     PHP_INI_DIR=/etc \
     PHP_FPM_CONF_DIR=/etc \
     ORACLE_INSTANTCLIENT_VERSION=12.1.0.2 \
@@ -111,21 +111,18 @@ RUN yum --setopt=tsflags=nodocs -y install \
             # Dependencies: libxslt, libgcrypt-devel, libgpg-error-devel
 
 # Get Sources
-# COPY p01-configure-5_6_11-ltdl.patch /usr/src/php/p01.patch
-RUN mkdir -p /usr/src/php/php-7.0.0b1 \
-    && curl -o /usr/src/php/php-7.0.0b1.tar.gz -SL "https://downloads.php.net/~ab/php-7.0.0beta1.tar.gz" \
-    && tar -xzf /usr/src/php/php-7.0.0b1.tar.gz --directory=/usr/src/php/php-7.0.0b1 --strip-components=1 \
-    && cd /usr/src/php/php-7.0.0b1 \
+RUN mkdir -p /usr/src/php/php-7.0 \
+    && curl -o /usr/src/php/php-7.0.tar.gz -SL "https://downloads.php.net/~ab/php-7.0.0beta2.tar.gz" \
+    && tar -xzf /usr/src/php/php-7.0.tar.gz --directory=/usr/src/php/php-7.0 --strip-components=1 \
+    && cd /usr/src/php/php-7.0 \
     && cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >>aclocal.m4 \
     && libtoolize --force --copy \
     && cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >build/libtool.m4 \
     && touch configure.in \
     && ./buildconf --force \
     && ln -s /usr/include/db4.7.25 /usr/include/db4.7
-#    && cd /usr/src/php/php-5.6.11 \
-#    && patch < /usr/src/php/p01.patch
 
-RUN cd /usr/src/php/php-7.0.0b1 \
+RUN cd /usr/src/php/php-7.0 \
     && env CFLAGS="-fno-strict-aliasing -Wno-pointer-sign" \
         EXTENSION_DIR="/usr/lib64/php/modules" \
         PEAR_INSTALLDIR="/usr/share/pear" ./configure \
@@ -146,7 +143,6 @@ RUN cd /usr/src/php/php-7.0.0b1 \
             --with-freetype-dir=/usr \
             --with-png-dir=/usr \
             --with-xpm-dir=/usr \
-            --with-vpx-dir=/usr \
             --enable-gd-native-ttf \
             --without-gdbm \
             --with-jpeg-dir=/usr \
@@ -216,7 +212,7 @@ RUN cd /usr/src/php/php-7.0.0b1 \
             --with-icu-dir=/usr \
             --with-enchant=shared,/usr
             
-RUN cd /usr/src/php/php-7.0.0b1 \
+RUN cd /usr/src/php/php-7.0 \
     && env CFLAGS="-fno-strict-aliasing -Wno-pointer-sign" \
         EXTENSION_DIR="/usr/lib64/php/modules" \
         PEAR_INSTALLDIR="/usr/share/pear" make \
@@ -228,18 +224,18 @@ RUN cd /usr/src/php/php-7.0.0b1 \
     && install -m 755 -d /run/php-fpm -d $PHP_FPM_CONF_DIR/php-fpm.d -d $PHP_INI_DIR/php.d \
     && install -m 644 php.ini-development $PHP_INI_DIR/php.ini.dist \
     && install -m 644 sapi/fpm/php-fpm.conf $PHP_FPM_CONF_DIR/php-fpm.conf.dist \
-    && cd /usr/src/php/php-7.0.0b1/ext/oci8 \
+    && cd /usr/src/php/php-7.0/ext/oci8 \
     && phpize \
     && ./configure --with-pic --with-oci8=shared,instantclient,/usr/lib/oracle/12.1/client64/lib \
     && make -j$(nproc) \
     && make install \
-    && cd /usr/src/php/php-7.0.0b1/ext/pdo_oci \
+    && cd /usr/src/php/php-7.0/ext/pdo_oci \
     && phpize \
     && ./configure --with-pic --with-pdo-oci=shared,instantclient,/usr,12.1 \
     && make -j$(nproc) \
     && make install \
-    && cd /tmp \
-    && rm -rf /usr/src/php \
+    && { rm -rf /tmp/* || true; } \
+    && { rm -rf /usr/src/php/* || true; } \
     && yum -y erase \
         gcc gcc-c++ cpp glibc-headers libmpc libstdc++-devel \
         make patch libtool autoconf automake m4 perl perl-Carp perl-Data-Dumper perl-Encode \
@@ -262,7 +258,7 @@ RUN cd /usr/src/php/php-7.0.0b1 \
     
 
 COPY php.ini $PHP_INI_DIR/
-#COPY php-fpm.conf $PHP_FPM_CONF_DIR/
+COPY php-fpm.conf $PHP_FPM_CONF_DIR/
 
 COPY centos-ext-ini-install.sh /usr/src/php/centos-ext-ini-install.sh
 RUN for __ext in pgsql odbc ldap snmp xmlrpc imap \
@@ -282,59 +278,60 @@ RUN for __ext in pgsql odbc ldap snmp xmlrpc imap \
         done \
     && install -m 750 -o apache -d /var/lib/php/{session,wsdlcache}
 
-#RUN curl -o /tmp/phpunit.phar -SL "https://phar.phpunit.de/phpunit.phar" \
-#    && chmod +x /tmp/phpunit.phar \
-#    && mv /tmp/phpunit.phar /usr/local/bin/phpunit \
-#    && { curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer.phar; } \
-#    && { ln -s /usr/local/bin/composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer.phar; } \
-#    && curl -o /tmp/pdepend.phar -sSL "http://static.pdepend.org/php/latest/pdepend.phar" \
-#    && chmod +x /tmp/pdepend.phar \
-#    && mv /tmp/pdepend.phar /usr/local/bin \
-#    && ln -s /usr/local/bin/pdepend.phar /usr/local/bin/pdepend \
-#    && curl -o /tmp/phpmd.phar -sSL "http://static.phpmd.org/php/latest/phpmd.phar" \
-#    && chmod +x /tmp/phpmd.phar \
-#    && mv /tmp/phpmd.phar /usr/local/bin \
-#    && ln -s /usr/local/bin/phpmd.phar /usr/local/bin/phpmd \
-#    && curl -o /tmp/phpcpd.phar -sSL "https://phar.phpunit.de/phpcpd.phar" \
-#    && chmod +x /tmp/phpcpd.phar \
-#    && mv /tmp/phpcpd.phar /usr/local/bin/ \
-#    && ln -s /usr/local/bin/phpcpd.phar /usr/local/bin/phpcpd \
-#    && curl -o /tmp/phploc.phar -sSL "https://phar.phpunit.de/phploc.phar" \
-#    && chmod +x /tmp/phploc.phar \
-#    && mv /tmp/phploc.phar /usr/local/bin \
-#    && ln -s /usr/local/bin/phploc.phar /usr/local/bin/phploc \
-#    && curl -o /tmp/phpdcd.phar -sSL "https://phar.phpunit.de/phpdcd.phar" \
-#    && chmod +x /tmp/phpdcd.phar \
-#    && mv /tmp/phpdcd.phar /usr/local/bin \
-#    && ln -s /usr/local/bin/phpdcd.phar /usr/local/bin/phpdcd \
-#    && curl -o /tmp/de-legacy-fy.phar -sSL "https://phar.phpunit.de/de-legacy-fy.phar" \
-#    && chmod +x /tmp/de-legacy-fy.phar \
-#    && mv /tmp/de-legacy-fy.phar /usr/local/bin \
-#    && ln -s /usr/local/bin/de-legacy-fy.phar /usr/local/bin/de-legacy-fy \
-#    && curl -o /tmp/phpcs.phar -sSL "https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar" \
-#    && chmod +x /tmp/phpcs.phar \
-#    && mv /tmp/phpcs.phar /usr/local/bin \
-#    && ln -s /usr/local/bin/phpcs.phar /usr/local/bin/phpcs \
-#    && curl -o /tmp/phpdox.phar -sSL "http://phpdox.de/releases/phpdox.phar" \
-#    && chmod +x /tmp/phpdox.phar \
-#    && mv /tmp/phpdox.phar /usr/local/bin \
-#    && ln -s /usr/local/bin/phpdox.phar /usr/local/bin/phpdox \
-#    && curl -o /tmp/hhvm-wrapper.phar -sSL "https://phar.phpunit.de/hhvm-wrapper.phar" \
-#    && chmod +x /tmp/hhvm-wrapper.phar \
-#    && mv /tmp/hhvm-wrapper.phar /usr/local/bin \
-#    && ln -s /usr/local/bin/hhvm-wrapper.phar /usr/local/bin/hhvm-wrapper \
-#    && curl -o /tmp/behat.phar -sSL "https://github.com/Behat/Behat/releases/download/v2.5.5/behat.phar" \
-#    && chmod +x /tmp/behat.phar \
-#    && mv /tmp/behat.phar /usr/local/bin \
-#    && ln -s /usr/local/bin/behat.phar /usr/local/bin/behat
-#
-#RUN { find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true; } \
-#    && yum clean all && { rm -rf /var/cache/yum/* || true; } \
-#    && mkdir -p /var/spool/xdebug/{profiler,trace} && chown -R apache:apache /var/spool/xdebug \
-#    && { rm $PHP_FPM_CONF_DIR/php-fpm.d/* || true; }
+RUN { curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer.phar; } \
+    && { ln -s /usr/local/bin/composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer.phar; } \
+    && curl -o /tmp/phpunit.phar -SL "https://phar.phpunit.de/phpunit-alpha.phar" \
+    && chmod +x /tmp/phpunit.phar \
+    && mv /tmp/phpunit.phar /usr/local/bin/phpunit.phar \
+    && ln -s /usr/local/bin/phpunit.phar /usr/local/bin/phpunit \
+    && curl -o /tmp/pdepend.phar -sSL "http://static.pdepend.org/php/latest/pdepend.phar" \
+    && chmod +x /tmp/pdepend.phar \
+    && mv /tmp/pdepend.phar /usr/local/bin \
+    && ln -s /usr/local/bin/pdepend.phar /usr/local/bin/pdepend \
+    && curl -o /tmp/phpmd.phar -sSL "http://static.phpmd.org/php/latest/phpmd.phar" \
+    && chmod +x /tmp/phpmd.phar \
+    && mv /tmp/phpmd.phar /usr/local/bin \
+    && ln -s /usr/local/bin/phpmd.phar /usr/local/bin/phpmd \
+    && curl -o /tmp/phpcpd.phar -sSL "https://phar.phpunit.de/phpcpd.phar" \
+    && chmod +x /tmp/phpcpd.phar \
+    && mv /tmp/phpcpd.phar /usr/local/bin/ \
+    && ln -s /usr/local/bin/phpcpd.phar /usr/local/bin/phpcpd \
+    && curl -o /tmp/phploc.phar -sSL "https://phar.phpunit.de/phploc.phar" \
+    && chmod +x /tmp/phploc.phar \
+    && mv /tmp/phploc.phar /usr/local/bin \
+    && ln -s /usr/local/bin/phploc.phar /usr/local/bin/phploc \
+    && curl -o /tmp/phpdcd.phar -sSL "https://phar.phpunit.de/phpdcd.phar" \
+    && chmod +x /tmp/phpdcd.phar \
+    && mv /tmp/phpdcd.phar /usr/local/bin \
+    && ln -s /usr/local/bin/phpdcd.phar /usr/local/bin/phpdcd \
+    && curl -o /tmp/de-legacy-fy.phar -sSL "https://phar.phpunit.de/de-legacy-fy.phar" \
+    && chmod +x /tmp/de-legacy-fy.phar \
+    && mv /tmp/de-legacy-fy.phar /usr/local/bin \
+    && ln -s /usr/local/bin/de-legacy-fy.phar /usr/local/bin/de-legacy-fy \
+    && curl -o /tmp/phpcs.phar -sSL "https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar" \
+    && chmod +x /tmp/phpcs.phar \
+    && mv /tmp/phpcs.phar /usr/local/bin \
+    && ln -s /usr/local/bin/phpcs.phar /usr/local/bin/phpcs \
+    && curl -o /tmp/phpdox.phar -sSL "http://phpdox.de/releases/phpdox.phar" \
+    && chmod +x /tmp/phpdox.phar \
+    && mv /tmp/phpdox.phar /usr/local/bin \
+    && ln -s /usr/local/bin/phpdox.phar /usr/local/bin/phpdox \
+    && curl -o /tmp/hhvm-wrapper.phar -sSL "https://phar.phpunit.de/hhvm-wrapper.phar" \
+    && chmod +x /tmp/hhvm-wrapper.phar \
+    && mv /tmp/hhvm-wrapper.phar /usr/local/bin \
+    && ln -s /usr/local/bin/hhvm-wrapper.phar /usr/local/bin/hhvm-wrapper \
+    && curl -o /tmp/behat.phar -sSL "https://github.com/Behat/Behat/releases/download/v2.5.5/behat.phar" \
+    && chmod +x /tmp/behat.phar \
+    && mv /tmp/behat.phar /usr/local/bin \
+    && ln -s /usr/local/bin/behat.phar /usr/local/bin/behat
+
+RUN { find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true; } \
+    && yum clean all && { rm -rf /var/cache/yum/* || true; } \
+    && mkdir -p /var/spool/xdebug/{profiler,trace} && chown -R apache:apache /var/spool/xdebug \
+    && { rm $PHP_FPM_CONF_DIR/php-fpm.d/* || true; }
 
 WORKDIR /var/www/html
 
-#EXPOSE 9000
+EXPOSE 9000
 
-#CMD ["php-fpm"]
+CMD ["php-fpm"]
