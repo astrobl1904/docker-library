@@ -11,7 +11,6 @@ included.
 - [`5.3-apache-centos6`, `5.3.3-apache-centos6` (*5.3/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.3/apache/Dockerfile)
 - [`latest`, `apache-centos`, `5-apache-centos`, `5.6-apache-centos`, `5.6.11-apache-centos` (*5.6/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/apache/Dockerfile)
 - [`fpm-centos`, `5-fpm-centos`, `5.6-fpm-centos`, `5.6.11-fpm-centos` (*5.6/fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/fpm/Dockerfile)
->
 - [`7beta-apache-centos`, `7.0beta-apache-centos`, `7.0.0b2-apache-centos` (*7.0/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/7.0/apache/Dockerfile)
 - [`7beta-fpm-centos`, `7.0beta-fpm-centos`, `7.0.0b2-fpm-centos` (*7.0/fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/7.0/fpm/Dockerfile)
 
