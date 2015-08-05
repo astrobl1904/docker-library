@@ -3,14 +3,17 @@
 This repo contains another Docker image for the PHP general-purpose scripting language.
 
 It is based on CentOS Linux and contains the Oracle `oci8` and the
-`Xdebug` modules. For PDF support PDFlib's proprietary `PDFlib` module is
+`Xdebug`\*) modules. For PDF support PDFlib's proprietary `PDFlib`\*) module is
 included.
 
 # Supported tags and respective `Dockerfile`
 
-- [`5.3.3-apache-centos6`, `5.3-apache-centos6` (*5.3/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.3/apache/Dockerfile)
-- [`5.6.11-apache-centos`, `5.6-apache-centos`, `5-apache-centos`, `apache-centos`, `latest` (*5.6/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/apache/Dockerfile)
-- [`5.6.11-fpm-centos`, `5.6-fpm-centos`, `5-fpm-centos`, `fpm-centos` (*5.6/fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/fpm/Dockerfile)
+- [`5.3-apache-centos6`, `5.3.3-apache-centos6` (*5.3/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.3/apache/Dockerfile)
+- [`latest`, `apache-centos`, `5-apache-centos`, `5.6-apache-centos`, `5.6.11-apache-centos` (*5.6/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/apache/Dockerfile)
+- [`fpm-centos`, `5-fpm-centos`, `5.6-fpm-centos`, `5.6.11-fpm-centos` (*5.6/fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/fpm/Dockerfile)
+>
+- [`7beta-apache-centos`, `7.0beta-apache-centos`, `7.0.0b2-apache-centos` (*7.0/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/7.0/apache/Dockerfile)
+- [`7beta-fpm-centos`, `7.0beta-fpm-centos`, `7.0.0b2-fpm-centos` (*7.0/fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/7.0/fpm/Dockerfile)
 
 # What is PHP
 
@@ -37,14 +40,15 @@ And many other interesting extensions exist, which are categorized both alphabet
 The following PHP modules are included with this Docker image:
 
 > php\_gd, php\_ldap, php\_mbstring, php\_mysql, php\_pgsql, php\_pdo, php\_soap, php\_xml, php\_devel, php\_pear, 
-> xdebug, oci8 (Instant Client 12.1.0.2), php\_pdflib (9.0.3)
+> xdebug\*), oci8 (Instant Client 12.1.0.2), php\_pdflib\*) (9.0.3)
 
 ## Included Code Quality Tools ##
 
 In releases 5.6.10 and forthgoing the following code quality tools are included and can be run interactively in a container
 
 > phpunit (PHPUnit), de-legacy-fy (PHP De-Legacyfyer), behat (Behat), phploc (PHPLoc), pdepend (PHP\_Depend), phpmd (PHP Mess Detector),
-> phpcs (PHP\_CodeSniffer), phpcpd (PHP Copy/Paste Detector), phpdcd (PHP Dead Code Detector), hhvm-wrapper, phpdox (phpDox)
+> phpcs (PHP\_CodeSniffer), phpcpd (PHP Copy/Paste Detector), phpdcd (PHP Dead Code Detector), hhvm-wrapper, phpdox (phpDox)  
+> Additionally: phpab [PHP Autoload Builder](https://github.com/theseer/Autoload) by TheSeer
 
 For more information please visit [The PHP Quality Assurance Toolchain](http://phpqatools.org)
 
@@ -53,7 +57,7 @@ For more information please visit [The PHP Quality Assurance Toolchain](http://p
 - PHP: /etc, /etc/php.d
 - Apache: /etc/httpd/conf
 - Oracle Instantclient: /etc
-- PDFlib: /usr/local/PDFlib/
+- PDFlib\*): /usr/local/PDFlib/
 
 ## Xdebug Configuration
 
@@ -102,10 +106,10 @@ This environment variable must be set in order to use the `oci8` module. The def
 
 # How to extend this image
 
-> If you want to create a certain Apache vhost, you may do so with providing an argument to the httpd command. This creates a `DocumentRoot` under `/var/www/` with the provided servername. You can either mount a local directory into this mount point or mount a volume from another Docker container.
+> If you want to create a certain Apache vhost, you may do so with providing an argument to the httpd command. This creates a `DocumentRoot` under `/var/www/` with the provided servername. You can either mount a local directory into this mount point or mount a volume from another Docker container. After the FQDN you can provide additional key-value pairs that will be substituted in the vhost template (in case you mounted your own template).
 > [Managing data in containers](https://docs.docker.com/userguide/dockervolumes/#volume).
 
-    docker run -name www-myserver -v /your/document/root:/var/www/myserver.domain.tld -d astrobl1904/php-dev httpd myserver.domain.tld
+    docker run -name www-myserver -v /your/document/root:/var/www/myserver.domain.tld -d astrobl1904/php-dev httpd myserver.domain.tld [[key=value] [key2=value]...]
 
 ## Build Dependencies
 
@@ -122,3 +126,5 @@ This image is supported on Docker version 1.6.2.
 
 Support for older versions (down to 1.0) is provided on a best-effort basis.
 
+---
+\*) These PHP modules are currently not available for PHP 7.
