@@ -341,6 +341,10 @@ COPY vhost.template $APACHE_CONF_DIR/sites/
 
 WORKDIR /var/www/html
 
+COPY docker-entrypoint.sh /
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
 EXPOSE 80
 
-#CMD ["docker-endpoint.sh"]
+CMD ["httpd"]
