@@ -6,7 +6,7 @@
 FROM centos:centos7
 MAINTAINER Andreas Strobl <astroblx@asgraphics.at>
 
-ENV PHP_VERSION=7.0.0b2 \
+ENV PHP_VERSION=7.0.0beta3 \
     PHP_INI_DIR=/etc \
     APACHE_CONF_DIR=/etc/httpd \
     ORACLE_INSTANTCLIENT_VERSION=12.1.0.2 \
@@ -117,7 +117,7 @@ RUN yum --setopt=tsflags=nodocs -y install \
 # Get Sources
 COPY p01-configure-ltdl.patch /usr/src/php/p01.patch
 RUN mkdir -p /usr/src/php/php-7.0 \
-    && curl -o /usr/src/php/php-7.0.tar.gz -SL "https://downloads.php.net/~ab/php-7.0.0beta2.tar.gz" \
+    && curl -o /usr/src/php/php-7.0.tar.gz -SL "https://downloads.php.net/~ab/php-7.0.0beta3.tar.gz" \
     && tar -xzf /usr/src/php/php-7.0.tar.gz --directory=/usr/src/php/php-7.0 --strip-components=1 \
     && cd /usr/src/php/php-7.0 \
     && cat `aclocal --print-ac-dir`/{libtool,ltoptions,ltsugar,ltversion,lt~obsolete}.m4 >>aclocal.m4 \

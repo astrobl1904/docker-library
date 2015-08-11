@@ -6,7 +6,7 @@
 FROM centos:centos7
 MAINTAINER Andreas Strobl <astroblx@asgraphics.at>
 
-ENV PHP_VERSION=5.6.11 \
+ENV PHP_VERSION=5.6.12 \
     PHP_INI_DIR=/etc \
     PHP_FPM_CONF_DIR=/etc \
     ORACLE_INSTANTCLIENT_VERSION=12.1.0.2 \
@@ -63,6 +63,7 @@ RUN yum --setopt=tsflags=nodocs --nogpgcheck -y install \
         php-fpm \
         php-common \
         php-cli \
+        php-bcmath \
         php-gd \
         php-ldap \
         php-mbstring \
@@ -70,6 +71,7 @@ RUN yum --setopt=tsflags=nodocs --nogpgcheck -y install \
         php-pgsql \
         php-oci8 \
         php-pdo \
+        php-opcache \
         php-soap \
         php-xml \
         php-pear \
@@ -132,7 +134,12 @@ RUN curl -o /tmp/phpunit.phar -SL "https://phar.phpunit.de/phpunit.phar" \
     && curl -o /tmp/behat.phar -sSL "https://github.com/Behat/Behat/releases/download/v2.5.5/behat.phar" \
     && chmod +x /tmp/behat.phar \
     && mv /tmp/behat.phar /usr/local/bin \
-    && ln -s /usr/local/bin/behat.phar /usr/local/bin/behat
+    && ln -s /usr/local/bin/behat.phar /usr/local/bin/behat \
+    && curl -o /tmp/phpab.phar -sSL "https://github.com/theseer/Autoload/releases/download/1.20.0/phpab-1.20.0.phar" \
+    && chmod +x /tmp/phpab.phar \
+    && mv /tmp/phpab.phar /usr/local/bin \
+    && ln -s /usr/local/bin/phpab.phar /usr/local/bin/phpab
+
 
 RUN { find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true; } \
     && yum clean all && { rm -rf /var/cache/yum/* || true; } \
