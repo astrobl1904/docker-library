@@ -51,9 +51,9 @@ RUN curl -o /tmp/epel-release-7-5.noarch.rpm -SL "http://dl.fedoraproject.org/pu
 COPY enable-zsh-zprezto /tmp/
 COPY licensekeys.txt /usr/local/PDFlib/licensekeys.txt
 
-RUN curl -o /tmp/pdflib-php.tar.gz -SL "http://www.pdflib.com/binaries/PDFlib/906/PDFlib-9.0.6p2-Linux-x86_64-php.tar.gz" \
-    && curl -o /tmp/oracle-instantclient.x86_64.rpm -SL "https://raw.githubusercontent.com/astrobl1904/docker-library/master/php-dev/commercial-components/oracle-instantclient.x86_64.rpm" \
-    && yum --setopt=tsflags=nodocs --nogpgcheck -y install \
+RUN curl -o /tmp/pdflib-php.tar.gz -SL "http://www.pdflib.com/binaries/PDFlib/906/PDFlib-9.0.6p2-Linux-x86_64-php.tar.gz"
+RUN curl -o /tmp/oracle-instantclient.x86_64.rpm -SL "https://raw.githubusercontent.com/astrobl1904/docker-library/master/php-dev/commercial-components/oracle-instantclient.x86_64.rpm"
+RUN yum --setopt=tsflags=nodocs --nogpgcheck -y install \
         tar \
         /tmp/oracle-instantclient.x86_64.rpm \
     && install -m 755 -d /usr/lib64/php/modules \
