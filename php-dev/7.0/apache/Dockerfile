@@ -56,12 +56,12 @@ RUN curl -o /tmp/pdflib-php.tar.gz -SL "http://www.pdflib.com/binaries/PDFlib/90
     && yum --setopt=tsflags=nodocs --nogpgcheck -y install \
         tar \
         /tmp/oracle-instantclient.x86_64.rpm \
-    && install -m 755 -d /usr/lib64/php/modules
-RUN tar -xzf /tmp/pdflib-php.tar.gz -C /usr/lib64/php/modules --no-same-owner --no-same-permissions --strip-components=4 */php-700/php_pdflib.so
-RUN echo "/usr/lib/oracle/12.1/client64/lib" > /etc/ld.so.conf.d/oracle-instantclient.x86_64.conf \
-    && echo "# Placeholder tnsnames.ora for Docker containers" > $TNS_ADMIN/tnsnames.ora \
-    && rm -rf /tmp/*.rpm /tmp/*.tar.gz \
-    && yum --setopt=tsflags=nodocs -y install \
+    && install -m 755 -d /usr/lib64/php/modules \
+    && tar -xzf /tmp/pdflib-php.tar.gz -C /usr/lib64/php/modules --no-same-owner --no-same-permissions --strip-components=4 */php-700/php_pdflib.so
+RUN echo "/usr/lib/oracle/12.1/client64/lib" > /etc/ld.so.conf.d/oracle-instantclient.x86_64.conf
+RUN echo "# Placeholder tnsnames.ora for Docker containers" > $TNS_ADMIN/tnsnames.ora
+RUN rm -rf /tmp/*.rpm /tmp/*.tar.gz
+RUN yum --setopt=tsflags=nodocs -y install \
         git \
         httpd \
         httpd-tools \
@@ -82,8 +82,8 @@ RUN echo "/usr/lib/oracle/12.1/client64/lib" > /etc/ld.so.conf.d/oracle-instantc
         php-pgsql \
         php-soap \
         php-xml \
-        zsh \
-    && rm -rf /var/www/html && mkdir -p /var/www/html && chown -R apache:apache /var/www/html \
+        zsh
+ RUN rm -rf /var/www/html && mkdir -p /var/www/html && chown -R apache:apache /var/www/html \
     && echo '; Enable xdebug extension module' > $PHP_INI_DIR/php.d/15-xdebug.ini \
     && echo 'zend_extension=xdebug.so' >> $PHP_INI_DIR/php.d/15-xdebug.ini \
     && echo '[xdebug]' >> $PHP_INI_DIR/php.d/20-xdebug.ini \
