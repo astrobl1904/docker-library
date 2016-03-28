@@ -11,7 +11,7 @@ included.
 - [`5.3-apache-centos6`, `5.3.3-apache-centos6` (*5.3/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.3/apache/Dockerfile)
 - [`latest`, `apache-centos`, `5-apache-centos`, `5.6-apache-centos`, `5.6.12-apache-centos` (*5.6/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/apache/Dockerfile)
 - [`fpm-centos`, `5-fpm-centos`, `5.6-fpm-centos`, `5.6.12-fpm-centos` (*5.6/fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/5.6/fpm/Dockerfile)
-- [`7beta-apache-centos`, `7.0beta-apache-centos`, `7.0.0beta3-apache-centos` (*7.0/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/7.0/apache/Dockerfile)
+- [`7-apache-centos`, `7.0-apache-centos`, `7.0.4-apache-centos` (*7.0/apache/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/7.0/apache/Dockerfile)
 - [`7beta-fpm-centos`, `7.0beta-fpm-centos`, `7.0.0beta3-fpm-centos` (*7.0/fpm/Dockerfile*)](https://github.com/astrobl1904/docker-library/tree/master/php-dev/7.0/fpm/Dockerfile)
 
 # What is PHP
@@ -33,7 +33,7 @@ PHP has useful text processing features, which includes the Perl compatible regu
 The following PHP modules are included with this Docker image:
 
 > php\_bcmath, php\_gd, php\_ldap, php\_mbstring, php\_mysql, php\_pgsql, php\_pdo, php\_soap, php\_xml, php\_devel, php\_opcache, php\_pear, 
-> xdebug\*), oci8 (Instant Client 12.1.0.2), php\_pdflib\*) (9.0.3)
+> xdebug), oci8 (Instant Client 12.1.0.2), php\_pdflib) (9.0.5)
 
 ## Included Code Quality Tools ##
 
@@ -73,6 +73,3 @@ _See [Managing data in containers](https://docs.docker.com/userguide/dockervolum
 This image is supported on Docker version 1.6.2.
 
 Support for older versions (down to 1.0) is provided on a best-effort basis.
-
----
-\*) These PHP modules are currently not available for PHP 7.
