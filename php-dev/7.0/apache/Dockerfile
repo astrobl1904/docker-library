@@ -57,12 +57,13 @@ RUN curl -o /tmp/pdflib-php.tar.gz -SL "http://www.pdflib.com/binaries/PDFlib/90
         tar \
         /tmp/oracle-instantclient.x86_64.rpm \
     && install -m 755 -d /usr/lib64/php/modules \
-    && tar -xzf /tmp/pdflib-php.tar.gz -C /usr/lib64/php/modules --no-same-owner --no-same-permissions --strip-components=4 */php-700/php_pdflib.so
-RUN echo "/usr/lib/oracle/12.1/client64/lib" > /etc/ld.so.conf.d/oracle-instantclient.x86_64.conf
-RUN echo "# Placeholder tnsnames.ora for Docker containers" > $TNS_ADMIN/tnsnames.ora
-RUN rm -rf /tmp/*.rpm /tmp/*.tar.gz
+    && tar -xzf /tmp/pdflib-php.tar.gz -C /usr/lib64/php/modules --no-same-owner --no-same-permissions --strip-components=4 */php-700/php_pdflib.so \
+    && echo "/usr/lib/oracle/12.1/client64/lib" > /etc/ld.so.conf.d/oracle-instantclient.x86_64.conf \
+    && echo "# Placeholder tnsnames.ora for Docker containers" > $TNS_ADMIN/tnsnames.ora \
+    && rm -rf /tmp/*.rpm /tmp/*.tar.gz
 RUN yum --setopt=tsflags=nodocs -y install \
-        git \
+        git
+RUN yum --setopt=tsflags=nodocs -y install \
         httpd \
         httpd-tools \
         net-tools \
