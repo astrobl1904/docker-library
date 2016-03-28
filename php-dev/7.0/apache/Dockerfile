@@ -64,7 +64,7 @@ RUN curl -o /tmp/pdflib-php.tar.gz -SL "http://www.pdflib.com/binaries/PDFlib/90
 RUN yum --setopt=tsflags=nodocs -y install \
         git \
         httpd \
-        httpd-tools
+        httpd-tools 
 RUN yum --setopt=tsflags=nodocs -y install \
         net-tools
 RUN yum --setopt=tsflags=nodocs -y install \
