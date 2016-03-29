@@ -61,8 +61,7 @@ RUN curl -o /tmp/pdflib-php.tar.gz -SL "http://www.pdflib.com/binaries/PDFlib/90
     && echo "/usr/lib/oracle/12.1/client64/lib" > /etc/ld.so.conf.d/oracle-instantclient.x86_64.conf \
     && echo "# Placeholder tnsnames.ora for Docker containers" > $TNS_ADMIN/tnsnames.ora \
     && rm -rf /tmp/*.rpm /tmp/*.tar.gz
-RUN yum --setopt=tsflags=nodocs -y install \
-        httpd
+RUN yum -y install httpd
 #        git
 #RUN yum --setopt=tsflags=nodocs -y install \
 #        httpd \
