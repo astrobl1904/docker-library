@@ -62,9 +62,9 @@ RUN curl -o /tmp/pdflib-php.tar.gz -SL "http://www.pdflib.com/binaries/PDFlib/90
     && echo "# Placeholder tnsnames.ora for Docker containers" > $TNS_ADMIN/tnsnames.ora \
     && rm -rf /tmp/*.rpm /tmp/*.tar.gz
 RUN yum --setopt=tsflags=nodocs -y install \
-        git
+        git \
+        httpd
 RUN yum --setopt=tsflags=nodocs -y install \
-        httpd \
         httpd-tools
 RUN yum --setopt=tsflags=nodocs -y install \
         net-tools \
